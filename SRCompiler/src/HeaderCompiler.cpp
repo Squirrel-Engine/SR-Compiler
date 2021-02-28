@@ -4,5 +4,7 @@
 
 HeaderCompiler::HeaderCompiler(HEADER_COMPILER_DESC* headerCompilerDesc)
 {
-	x = 0;
+	preProcessor = new PreProcessor(headerCompilerDesc->path);
+	preProcessor->defragmentHeaderFiles();
+	preProcessor->splitHeaderFile();
 }
