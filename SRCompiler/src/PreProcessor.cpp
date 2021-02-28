@@ -58,24 +58,55 @@ void PreProcessor::splitHeaderFile()
 	
     //Enum
     int enumIndexBuffer = 0;
-    int n = 1;
+    int n = 0;
+    std::vector<int> indexArray;
+    size_t found = str.find(en);
+    if (found != std::pmr::string::npos)
+	    std::cout << "First occurrence is " << found << std::endl;
+	
+    indexArray.push_back(found);
+    char arr[] = "SR_ENUM()";
+    found = str.find(arr, found + 1);
+    if (found != std::pmr::string::npos)
+        std::cout << "Next occurrence is " << found << std::endl;
+
+    indexArray.push_back(found);
+	
+    found = str.find(arr, found + 2);
+    if (found != std::pmr::string::npos)
+        std::cout << "Next occurrence is " << found << std::endl;
+
+    indexArray.push_back(found);
+	
+    found = str.find(arr, found + 3);
+    if (found != std::pmr::string::npos)
+        std::cout << "Next occurrence is " << found << std::endl;
+
+    indexArray.push_back(found);
+	
+    found = str.find(arr, found + 4);
+    if (found != std::pmr::string::npos)
+        std::cout << "Next occurrence is " << found << std::endl;
+	
+    indexArray.push_back(found);
+
+    found = str.find(arr, found + 5);
+    if (found != std::pmr::string::npos)
+        std::cout << "Next occurrence is " << found << std::endl;
+
+    indexArray.push_back(found);
+	
+	
     while (true)
     {
-        std::cout << "Index Buffer: " << enumIndexBuffer;
-        std::cout << "STR Find: " << str.find(en, n);
-        std::cout << "N: " << n;
-        n = str.find(en, n) + 10;
-        if (enumIndexBuffer == str.find(en, n))
-        {
-            break;
-        }
-    	
 
-    	
-        
-        enumIndexBuffer = str.find(en, n);
-
-        str.insert((str.find(en, n) + 9), "\n");
+        str.insert((str.find(en, indexArray.at(0)) + 0), "\n");
+        str.insert((str.find(en, indexArray.at(1)) + 9), "\n");
+        str.insert((str.find(en, indexArray.at(2)) + 0), "\n");
+        str.insert((str.find(en, indexArray.at(3)) + 9), "\n");
+        str.insert((str.find(en, indexArray.at(4)) + 0), "\n");
+        str.insert((str.find(en, indexArray.at(5)) + 9), "\n");
+        break;
 
     }
 
