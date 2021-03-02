@@ -7,6 +7,11 @@ PreProcessor::PreProcessor(std::string _headerFolderPath)
     headerFolderPath = _headerFolderPath;
 }
 
+enum class test
+{
+	SR_ENUM,
+	
+};
 void PreProcessor::defragmentHeaderFiles()
 {
     std::vector<std::ifstream> files;
@@ -43,7 +48,6 @@ void PreProcessor::defragmentHeaderFiles()
 
 void PreProcessor::splitHeaderFile()
 {
-    std::string en = "SR_ENUM()";
     std::ifstream t("Output.txt");
     std::string str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
@@ -51,68 +55,69 @@ void PreProcessor::splitHeaderFile()
     str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
 
 	
-    // Sinsirella 
-	//__________**___________________**__________\\
-	//_____________________^^____________________\\
-	//___________________------__________________\\
+    std::string enumLabel = "SR_ENUM()";
+    std::string structLabel = "SR_STRUCT()";
+    std::string actorLabel = "SR_ACTOR()";
+    std::string componentLabel = "SR_COMPONENT()";
+
 	
-    //Enum
-    int enumIndexBuffer = 0;
-    int n = 0;
+    typeLiner(enumLabel, str);
+    typeLiner(structLabel, str);
+    typeLiner(actorLabel, str);
+    typeLiner(componentLabel, str);
+    std::cout << str;
+
+}
+
+void PreProcessor::typeLiner(std::string typeName, std::string &sourceText)
+{
     std::vector<int> indexArray;
-    size_t found = str.find(en);
-    if (found != std::pmr::string::npos)
-	    std::cout << "First occurrence is " << found << std::endl;
 	
-    indexArray.push_back(found);
-    char arr[] = "SR_ENUM()";
-    found = str.find(arr, found + 1);
+    size_t found = sourceText.find(typeName.c_str());
+	
     if (found != std::pmr::string::npos)
-        std::cout << "Next occurrence is " << found << std::endl;
+        std::cout << "First occurrence is " << found << std::endl;
 
     indexArray.push_back(found);
-	
-    found = str.find(arr, found + 2);
-    if (found != std::pmr::string::npos)
-        std::cout << "Next occurrence is " << found << std::endl;
+    int firstIndex = found;
 
-    indexArray.push_back(found);
 	
-    found = str.find(arr, found + 3);
-    if (found != std::pmr::string::npos)
-        std::cout << "Next occurrence is " << found << std::endl;
-
-    indexArray.push_back(found);
-	
-    found = str.find(arr, found + 4);
-    if (found != std::pmr::string::npos)
-        std::cout << "Next occurrence is " << found << std::endl;
-	
-    indexArray.push_back(found);
-
-    found = str.find(arr, found + 5);
-    if (found != std::pmr::string::npos)
-        std::cout << "Next occurrence is " << found << std::endl;
-
-    indexArray.push_back(found);
-	
-	
+    int searchIndex = 1;
     while (true)
     {
-
-        str.insert((str.find(en, indexArray.at(0)) + 0), "\n");
-        str.insert((str.find(en, indexArray.at(1)) + 9), "\n");
-        str.insert((str.find(en, indexArray.at(2)) + 0), "\n");
-        str.insert((str.find(en, indexArray.at(3)) + 9), "\n");
-        str.insert((str.find(en, indexArray.at(4)) + 0), "\n");
-        str.insert((str.find(en, indexArray.at(5)) + 9), "\n");
-        break;
-
+    	if(found == 0)
+    	{
+            searchIndex++;
+            firstIndex = sourceText.find(typeName, found + searchIndex);
+            found = sourceText.find(typeName, found + searchIndex);
+            indexArray.push_back(found);
+            continue;
+    		
+    	}
+        found = sourceText.find(typeName, found + searchIndex);
+        indexArray.push_back(found);
+        if (firstIndex == indexArray.at(searchIndex))
+        {
+            indexArray.pop_back();
+            break;
+        }
+        if (found != std::pmr::string::npos)
+            std::cout << "Next occurrence is " << found << std::endl;
+        searchIndex++;
     }
 
+    for (int i = 0; i < indexArray.size(); i++)
+    {
+	    if (i % 2 == 0)
+	    {
+	    }else
+	    {
+            sourceText.insert((sourceText.find(typeName, indexArray.at(i)) + typeName.length()), "\n");
+	    }
+    }
+
+	
 
 
-
-    std::cout << str << std::endl;
 
 }

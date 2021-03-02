@@ -16,6 +16,7 @@ public:
 	void defragmentHeaderFiles();
 	void splitHeaderFile();
 private:
+	void typeLiner(std::string typeName, std::string& sourceText);
 	std::string headerFolderPath;
 };
 
