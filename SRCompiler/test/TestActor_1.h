@@ -1,22 +1,22 @@
 SR_ENUM()
-enum class AMMO_TYPE{
-    HANDGUN,RIFLE
-};
+	enum class AMMO_TYPE{
+					  HANDGUN,RIFLE
+		};
 SR_ENUM()
 
 SR_ENUM()
 enum class AMMO_TYPE2{
-    HANDGUN2,RIFLE2
+	HANDGUN2,RIFLE2
 };
 SR_ENUM()
 
 
 SR_STRUCT()
 struct Ammo{
-    int handgunAmmo=0;
-    AMMO_TYPE rifleAmmo=AMMO_TYPE::HANDGUN;
-    float sniperAmmo=2;
-    int machinegunAmmo=sniperAmmo*2;
+	int handgunAmmo=0;
+	AMMO_TYPE rifleAmmo=AMMO_TYPE::HANDGUN;
+	float sniperAmmo=2;
+	int machinegunAmmo=sniperAmmo*2;
 };
 SR_STRUCT()
 

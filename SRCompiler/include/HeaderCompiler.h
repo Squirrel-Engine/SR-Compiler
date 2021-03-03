@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
 
+
+#include "HeaderAnalyser.h"
 #include "PreProcessor.h"
+#include "TokenStore.h"
 
 typedef struct HEADER_COMPILER_DESC
 {
@@ -16,7 +19,8 @@ public:
 	HeaderCompiler(HEADER_COMPILER_DESC* headerCompilerDesc);
 
 private:
+	TokenStore* tokenStore;
 	PreProcessor* preProcessor;
-
+	HeaderAnalyser* headerAnalyser;
 };
 

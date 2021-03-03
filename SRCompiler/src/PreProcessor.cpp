@@ -2,16 +2,101 @@
 
 #include <vector>
 
+
+void eraseFileLine(std::string path, char eraseCharacter) {
+    std::string line;
+    std::ifstream fin;
+
+    fin.open(path);
+    // contents of path must be copied to a temp file then
+    // renamed back to the path file
+    std::ofstream temp;
+    temp.open("temp.txt");
+
+    while (getline(fin, line)) {
+        // write all lines to temp other than the line marked for erasing
+    	if(line[0] != eraseCharacter)
+    	{
+            temp << line << std::endl;
+    	}
+    	 
+    }
+
+    temp.close();
+    fin.close();
+
+    // required conversion for remove and rename functions
+    const char* p = path.c_str();
+    remove(p);
+    rename("temp.txt", p);
+}
+
+void removeSpaces(std::string& str)
+{
+    // n is length of the original string
+    int n = str.length();
+
+    // i points to next position to be filled in
+    // output string/ j points to next character
+    // in the original string
+    int i = 0, j = -1;
+
+    // flag that sets to true is space is found
+    bool spaceFound = false;
+
+    // Handles leading spaces
+    while (++j < n && str[j] == ' ');
+
+    // read all characters of original string
+    while (j < n)
+    {
+        // if current characters is non-space
+        if (str[j] != ' ')
+        {
+            // remove preceding spaces before dot,
+            // comma & question mark
+            if ((str[j] == '.' ||
+                str[j] == ',' ||
+                str[j] == '?') && i - 1 >= 0 && str[i - 1] == ' ') {
+                str[i - 1] = str[j++];
+            }
+            else {
+                // copy current character at index i
+                // and increment both i and j
+                str[i++] = str[j++];
+            }
+            // set space flag to false when any
+            // non-space character is found
+            spaceFound = false;
+        }
+        // if current character is a space
+        else if (str[j++] == ' ')
+        {
+            // If space is encountered for the first
+            // time after a word, put one space in the
+            // output and set space flag to true
+            if (!spaceFound)
+            {
+                str[i++] = ' ';
+                spaceFound = true;
+            }
+        }
+    }
+
+    // Remove trailing spaces
+    if (i <= 1) {
+        str.erase(str.begin() + i, str.end());
+    }
+    else {
+        str.erase(str.begin() + i - 1, str.end());
+    }
+}
+
 PreProcessor::PreProcessor(std::string _headerFolderPath)
 {
     headerFolderPath = _headerFolderPath;
 }
 
-enum class test
-{
-	SR_ENUM,
-	
-};
 void PreProcessor::defragmentHeaderFiles()
 {
     std::vector<std::ifstream> files;
@@ -43,6 +128,8 @@ void PreProcessor::defragmentHeaderFiles()
     }
     outputFile.close();
 
+	// Delete includes and compiler directives
+    eraseFileLine("Output.txt", '#');
 	
 }
 
@@ -51,7 +138,9 @@ void PreProcessor::splitHeaderFile()
     std::ifstream t("Output.txt");
     std::string str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
+
     str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
+
     str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
 
 	
@@ -60,12 +149,18 @@ void PreProcessor::splitHeaderFile()
     std::string actorLabel = "SR_ACTOR()";
     std::string componentLabel = "SR_COMPONENT()";
 
-	
     typeLiner(enumLabel, str);
     typeLiner(structLabel, str);
     typeLiner(actorLabel, str);
     typeLiner(componentLabel, str);
-    std::cout << str;
+	
+
+	
+	removeSpaces(str);
+    std::ofstream out("Output.txt");
+    out << str;
+    out.close();
+	
 
 }
 
@@ -75,13 +170,9 @@ void PreProcessor::typeLiner(std::string typeName, std::string &sourceText)
 	
     size_t found = sourceText.find(typeName.c_str());
 	
-    if (found != std::pmr::string::npos)
-        std::cout << "First occurrence is " << found << std::endl;
-
     indexArray.push_back(found);
     int firstIndex = found;
 
-	
     int searchIndex = 1;
     while (true)
     {
@@ -101,8 +192,7 @@ void PreProcessor::typeLiner(std::string typeName, std::string &sourceText)
             indexArray.pop_back();
             break;
         }
-        if (found != std::pmr::string::npos)
-            std::cout << "Next occurrence is " << found << std::endl;
+
         searchIndex++;
     }
 
@@ -115,9 +205,5 @@ void PreProcessor::typeLiner(std::string typeName, std::string &sourceText)
             sourceText.insert((sourceText.find(typeName, indexArray.at(i)) + typeName.length()), "\n");
 	    }
     }
-
-	
-
-
 
 }

@@ -1,5 +1,5 @@
 SR_ENUM()
-enum class MEDICINE_TYPE{
+enum class MEDICINE_TYPE  {
     PAINKILLER
 };
 SR_ENUM()
