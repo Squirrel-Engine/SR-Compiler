@@ -41,10 +41,6 @@ int main(int argc, char** argv)
         }
 	}
 
-	
-	// Compiler Objects
-    HeaderCompiler* headerCompiler = new HeaderCompiler(&hd);
-    MapCompiler* mapCompiler = new MapCompiler(&md);
 
 	
 	// Switch
@@ -54,7 +50,8 @@ int main(int argc, char** argv)
         break;
     case ECompilerMode::HEADER_COMPILER:
 	    try{
-            //throw MyException();
+            HeaderCompiler* headerCompiler = new HeaderCompiler(&hd);
+            headerCompiler->compile();
 	    }
         catch (MyException& e) {
             std::cout << e.what() << std::endl;
@@ -62,7 +59,7 @@ int main(int argc, char** argv)
         break;
     case ECompilerMode::MAP_COMPILER:
         try {
-            // CODE HERE!! 
+            MapCompiler* mapCompiler = new MapCompiler(&md);
         }
         catch (const char* msg) {
             cerr << msg << endl;
@@ -70,6 +67,4 @@ int main(int argc, char** argv)
         break;
          
     }
-
-
 }

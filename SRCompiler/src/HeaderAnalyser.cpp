@@ -28,8 +28,8 @@ void HeaderAnalyser::generateTokens()
         if(found != std::string::npos)
 	    {
             token_store->insertEnumToken(generateEnumToken(lexemesList.at(i)));
-            std::cout << "Enum Found: " << i << std::endl;
 	    }
+    	
     }
 }
 //SR_ENUM()enum class AMMO_TYPE{ HANDGUN,RIFLE};SR_ENUM()

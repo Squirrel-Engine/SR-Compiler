@@ -8,15 +8,15 @@
 #include <iterator>
 
 typedef std::vector<std::string> stringvec;
-class PreProcessor
+class HeaderPreprocessor
 {
 public:
-	PreProcessor(std::string headerFolderPath);
+	HeaderPreprocessor(std::string headerFolderPath);
 
 	void defragmentHeaderFiles();
 	void splitHeaderFile();
 private:
-	void typeLiner(std::string typeName, std::string& sourceText);
+	void typeLiner(std::string macroKeyword, std::string& sourceText);
 	std::string headerFolderPath;
 };
 

@@ -1,15 +1,14 @@
-#include "PreProcessor.h"
+#include "HeaderPreprocessor.h"
 
 #include <vector>
 
 
-void eraseFileLine(std::string path, char eraseCharacter) {
+void eraseCharacterLine(std::string path, char eraseCharacter) {
     std::string line;
     std::ifstream fin;
 
     fin.open(path);
-    // contents of path must be copied to a temp file then
-    // renamed back to the path file
+
     std::ofstream temp;
     temp.open("temp.txt");
 
@@ -33,15 +32,12 @@ void eraseFileLine(std::string path, char eraseCharacter) {
 
 void removeSpaces(std::string& str)
 {
-    // n is length of the original string
     int n = str.length();
 
-    // i points to next position to be filled in
-    // output string/ j points to next character
-    // in the original string
-    int i = 0, j = -1;
+    // i points to next position to be filled in output string j points to next character in the original string
+    int i = 0;
+	int j = -1;
 
-    // flag that sets to true is space is found
     bool spaceFound = false;
 
     // Handles leading spaces
@@ -53,28 +49,23 @@ void removeSpaces(std::string& str)
         // if current characters is non-space
         if (str[j] != ' ')
         {
-            // remove preceding spaces before dot,
-            // comma & question mark
+            // remove preceding spaces before dot, comma & question mark
             if ((str[j] == '.' ||
                 str[j] == ',' ||
                 str[j] == '?') && i - 1 >= 0 && str[i - 1] == ' ') {
                 str[i - 1] = str[j++];
             }
             else {
-                // copy current character at index i
-                // and increment both i and j
+                // copy current character at index i and increment both i and j
                 str[i++] = str[j++];
             }
-            // set space flag to false when any
-            // non-space character is found
+            // set space flag to false when any non-space character is found
             spaceFound = false;
         }
         // if current character is a space
         else if (str[j++] == ' ')
         {
-            // If space is encountered for the first
-            // time after a word, put one space in the
-            // output and set space flag to true
+            // If space is encountered for the first time after a word, put one space in the output and set space flag to true
             if (!spaceFound)
             {
                 str[i++] = ' ';
@@ -82,7 +73,7 @@ void removeSpaces(std::string& str)
             }
         }
     }
-
+	
     // Remove trailing spaces
     if (i <= 1) {
         str.erase(str.begin() + i, str.end());
@@ -92,23 +83,24 @@ void removeSpaces(std::string& str)
     }
 }
 
-PreProcessor::PreProcessor(std::string _headerFolderPath)
+HeaderPreprocessor::HeaderPreprocessor(std::string _headerFolderPath)
 {
     headerFolderPath = _headerFolderPath;
 }
 
-void PreProcessor::defragmentHeaderFiles()
+
+void HeaderPreprocessor::defragmentHeaderFiles()
 {
-    std::vector<std::ifstream> files;
     std::ifstream bufferFile;
     std::ofstream outputFile;
 	
-    std::vector<std::string> headerNames;
+    std::vector<std::string> headerPathList;
     for (const auto& entry : std::filesystem::directory_iterator(headerFolderPath))
     {
-        headerNames.push_back(std::string{ entry.path().u8string()});
+        headerPathList.push_back(std::string{ entry.path().u8string()});
     	
     }
+
     if (outputFile.good() == true)
     {
         outputFile.open("Output.txt");
@@ -116,12 +108,12 @@ void PreProcessor::defragmentHeaderFiles()
     {
         outputFile.open("Output.txt", std::ios::app);
     }
-
     outputFile.clear();
-    for(int i = 0; i < headerNames.size(); i++)
+	
+    for(int i = 0; i < headerPathList.size(); i++)
     {
-        std::cout << headerNames.at(i) << std::endl;
-        bufferFile.open(headerNames.at(i));
+        std::cout << headerPathList.at(i) << std::endl;
+        bufferFile.open(headerPathList.at(i));
         outputFile << bufferFile.rdbuf() << "\n";
         bufferFile.close();
         bufferFile.clear();
@@ -129,81 +121,91 @@ void PreProcessor::defragmentHeaderFiles()
     outputFile.close();
 
 	// Delete includes and compiler directives
-    eraseFileLine("Output.txt", '#');
+    eraseCharacterLine("Output.txt", '#');
 	
 }
 
-void PreProcessor::splitHeaderFile()
+void HeaderPreprocessor::splitHeaderFile()
 {
     std::ifstream t("Output.txt");
     std::string str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
 
+	// Remove Tab 
     str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
 
+	// Remove New Lines
     str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
 
-	
+
+	// Macro Keywords
     std::string enumLabel = "SR_ENUM()";
     std::string structLabel = "SR_STRUCT()";
     std::string actorLabel = "SR_ACTOR()";
     std::string componentLabel = "SR_COMPONENT()";
 
+	// Constructor of the line by line structure
     typeLiner(enumLabel, str);
     typeLiner(structLabel, str);
     typeLiner(actorLabel, str);
     typeLiner(componentLabel, str);
 	
-
-	
+	// Remove Whitespaces
 	removeSpaces(str);
+
+	// Write string into file
     std::ofstream out("Output.txt");
     out << str;
     out.close();
-	
 
 }
 
-void PreProcessor::typeLiner(std::string typeName, std::string &sourceText)
+void HeaderPreprocessor::typeLiner(std::string macroKeyword, std::string &sourceText)
 {
-    std::vector<int> indexArray;
-	
-    size_t found = sourceText.find(typeName.c_str());
-	
-    indexArray.push_back(found);
-    int firstIndex = found;
+    std::vector<int> indexArray; // All Encountered Indices 
+    
+    size_t found = sourceText.find(macroKeyword.c_str()); 	// First Encounter with Macro Keyword
 
+    indexArray.push_back(found);
+	
+    int firstIndex = found;
     int searchIndex = 1;
     while (true)
     {
-    	if(found == 0)
+    	if(found == 0) // If first encounter with keyword is at zero, this scope should run for that special case
     	{
             searchIndex++;
-            firstIndex = sourceText.find(typeName, found + searchIndex);
-            found = sourceText.find(typeName, found + searchIndex);
+            firstIndex = sourceText.find(macroKeyword, found + searchIndex);
+            found = sourceText.find(macroKeyword, found + searchIndex);
             indexArray.push_back(found);
             continue;
     		
     	}
-        found = sourceText.find(typeName, found + searchIndex);
+        found = sourceText.find(macroKeyword, found + searchIndex);
         indexArray.push_back(found);
         if (firstIndex == indexArray.at(searchIndex))
         {
             indexArray.pop_back();
             break;
         }
-
         searchIndex++;
     }
 
     for (int i = 0; i < indexArray.size(); i++)
     {
-	    if (i % 2 == 0)
+    	// Only put newline to odd encounters, otherwise it duplicates new line
+    	if (i % 2 == 0)
 	    {
-	    }else
+	    	continue;
+	    }
+    	else
 	    {
-            sourceText.insert((sourceText.find(typeName, indexArray.at(i)) + typeName.length()), "\n");
+            sourceText.insert((sourceText.find(macroKeyword, indexArray.at(i)) + macroKeyword.length()), "\n");
 	    }
     }
 
 }
+
+
+
+

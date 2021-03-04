@@ -3,7 +3,7 @@
 
 
 #include "HeaderAnalyser.h"
-#include "PreProcessor.h"
+#include "HeaderPreprocessor.h"
 #include "TokenStore.h"
 
 typedef struct HEADER_COMPILER_DESC
@@ -17,10 +17,11 @@ class HeaderCompiler
 public:
 	int x = 0;
 	HeaderCompiler(HEADER_COMPILER_DESC* headerCompilerDesc);
-
+	void compile();
 private:
+	
 	TokenStore* tokenStore;
-	PreProcessor* preProcessor;
+	HeaderPreprocessor* headerPreprocesor;
 	HeaderAnalyser* headerAnalyser;
 };
 
