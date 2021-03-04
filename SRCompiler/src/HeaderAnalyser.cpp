@@ -36,7 +36,7 @@ void HeaderAnalyser::generateTokens()
 TO_Enum HeaderAnalyser::generateEnumToken(std::string lexemes)
 {
     TO_Enum enumToken;
-
+   
     int classKeywordIndex = lexemes.find("class", 0) + 6;
     int bracesOpenIndex = lexemes.find("{", classKeywordIndex);
     int bracesCloseIndex = lexemes.find("}", classKeywordIndex);
