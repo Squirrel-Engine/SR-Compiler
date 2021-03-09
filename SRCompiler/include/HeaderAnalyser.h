@@ -5,7 +5,7 @@
 #include <ostream>
 #include <fstream>
 
-
+#include "KeywordPool.h"
 #include "TokenStore.h"
 #include "TokenTypes.h"
 
@@ -20,7 +20,9 @@ public:
 	TokenStore* token_store;
 	void generateTokens();
 	
-	TO_Enum generateEnumToken(std::string lexemes);
+	HeaderKeywords headerKeywords;
+
+	TO_Actor* generateActorToken(std::string lexemes);
 	
 };
 

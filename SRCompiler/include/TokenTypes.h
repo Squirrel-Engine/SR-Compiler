@@ -3,23 +3,15 @@
 #include <vector>
 
 
-struct TO_Enum
-{
-	std::string headerName;
-	std::vector<std::string> values;
-};
-
-struct TO_Struct
-{
-	
-};
-
 struct TO_Actor
 {
+	std::vector<std::string> variables;
+	std::vector<std::string> components;
 	
 };
 
 struct TO_Component
 {
-	
+	std::vector<std::string> variables;
+	std::vector<std::string> components;
 };

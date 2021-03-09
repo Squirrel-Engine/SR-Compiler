@@ -1,16 +1,4 @@
-SR_ENUM()
-enum class MEDICINE_TYPE  {
-    PAINKILLER
-};
-SR_ENUM()
-
-SR_STRUCT()
-struct Medicine{
-    int med1=0;
-    int med2=0;
-};
-SR_STRUCT()
-
+#include "Medicine.h"
 
 SR_ACTOR()
 class TestActor_2 : Squirrel::Actor
@@ -26,9 +14,15 @@ public:
 	SR_VAR_START()
 		int var12 = 5;
 		int var45 = 10;
+		int var32 = 5;
+		int var65 = 10;
 
-		Medicine medStruct {5, 2};
 	SR_VAR_END()
+
+
+	Medicine medStruct {5, 2};
+
+
 
 	SR_COMP_START()
 		TestComponent_1* testComponent;

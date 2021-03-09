@@ -91,6 +91,8 @@ HeaderPreprocessor::HeaderPreprocessor(std::string _headerFolderPath)
 
 void HeaderPreprocessor::defragmentHeaderFiles()
 {
+
+	
     std::ifstream bufferFile;
     std::ofstream outputFile;
 	
@@ -139,14 +141,10 @@ void HeaderPreprocessor::splitHeaderFile()
 
 
 	// Macro Keywords
-    std::string enumLabel = "SR_ENUM()";
-    std::string structLabel = "SR_STRUCT()";
     std::string actorLabel = "SR_ACTOR()";
     std::string componentLabel = "SR_COMPONENT()";
 
 	// Constructor of the line by line structure
-    typeLiner(enumLabel, str);
-    typeLiner(structLabel, str);
     typeLiner(actorLabel, str);
     typeLiner(componentLabel, str);
 	
@@ -205,7 +203,3 @@ void HeaderPreprocessor::typeLiner(std::string macroKeyword, std::string &source
     }
 
 }
-
-
-
-
