@@ -5,13 +5,14 @@
 
 struct TO_Actor
 {
-	std::vector<std::string> variables;
-	std::vector<std::string> components;
+	std::string actorName;
+	std::string variables;
+	std::string components;
 	
 };
 
 struct TO_Component
 {
-	std::vector<std::string> variables;
-	std::vector<std::string> components;
+	std::string componentName;
+	std::string variables;
 };

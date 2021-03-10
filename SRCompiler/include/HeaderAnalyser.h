@@ -23,6 +23,7 @@ public:
 	HeaderKeywords headerKeywords;
 
 	TO_Actor* generateActorToken(std::string lexemes);
+	TO_Component* generateComponentToken(std::string lexemes);
 	
 };
 

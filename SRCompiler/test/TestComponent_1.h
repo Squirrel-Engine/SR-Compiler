@@ -1,16 +1,20 @@
-#pragma once
+#include "Components";
+#inclıde 	"test";
+
+
 SR_COMPONENT()
-class TestComponent_1 : Squirrel::ActorComponent
+class 	RenderComponent :   Squirrel::Actor
 {
 public:
-	TestComponent_1();
-	void BeginPlay() override;
-	void Update() override;
-	
+	RenderComponent();
+	void getMesh();
+
 	SR_VAR_START()
-		int health;
-		int isAlive;
-		Ammo ammoBox = {10,10,10,100};
+			int meshID;
+			char meshChar
+			double dob
 	SR_VAR_END()
+	Mesh ammo;
+	Texture we;
 };
 SR_COMPONENT()

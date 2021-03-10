@@ -2,10 +2,9 @@
 #include "EAmmo_Type.h"
 
 SR_ACTOR()
-class TestActor_1 : Squirrel::Actor
+class Skeleton : Squirrel::Actor
 {
 	BODY()
-
 public:
 	TestActor();
 	//(int var1, int var2, int var3);
@@ -13,11 +12,10 @@ public:
 	void Update() override;
 	
 	SR_VAR_START()
-		int var1 = 5;
-		float var2 = 10;
-		char var3 = 15;
-		double var4 = 20;
-
+	int weapon = 5;
+	float health = 10;
+	char attack = 15;
+	double power = 20;
 	SR_VAR_END()
 
 	
@@ -26,10 +24,10 @@ public:
 
 
 	SR_COMP_START()
-		TestComponent_1* testComponent;
+			TransformComponent* transformComponent;
+		RenderComponent* renderComponent;
 	SR_COMP_END()
 
-private:
-	
+
 };
 SR_ACTOR()

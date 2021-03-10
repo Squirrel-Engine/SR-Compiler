@@ -3,7 +3,7 @@
 
 
 SR_COMPONENT()
-class TransformComponent : Squirrel::Actor
+class MelisaComponent : Squirrel::Actor
 {
 public:
 	TransformComponents();

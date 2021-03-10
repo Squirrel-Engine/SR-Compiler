@@ -4,6 +4,7 @@
 
 #include "HeaderAnalyser.h"
 #include "HeaderPreprocessor.h"
+#include "HeaderSynthesizer.h"
 #include "TokenStore.h"
 
 typedef struct HEADER_COMPILER_DESC
@@ -23,5 +24,6 @@ private:
 	TokenStore* tokenStore;
 	HeaderPreprocessor* headerPreprocesor;
 	HeaderAnalyser* headerAnalyser;
+	HeaderSynthesizer* headerSynthesizer;
 };
 
